@@ -1,5 +1,6 @@
 const URL =  require("../modules/url")
 const { nanoid } = require('nanoid');
+const User = require("../modules/user");
 
 
 async function handleGenerateShortId(req , res) {
@@ -22,15 +23,21 @@ async function handleGenerateShortId(req , res) {
 }
 
 async function handleGetallShortId(req , res) {
-
- const allShortUrl = await URL.find({userId : req.decodedData.id}).select('url short -_id ')
  
-  return res.json({msg : "allShortUrls" , allShortUrl})
-}
+  if(req.decodedData.role ==="admin" ){
+    const allShortUrl = await URL.find({}).select('url short -_id')
+    return res.json({msg : "allShortUrls" , allShortUrl})
+  }
+  else{
+     const allShortUrl = await URL.find({userId : req.decodedData.id}).select('url short -_id ')
+     return res.json({msg : "allShortUrls" , allShortUrl})
+     }
+  } 
+
 
 async function handleOriginalUrl(req , res) {
   const Ourl = req.params.shorturl
-  console.log("looking for:" , Ourl)
+  
   const realurl = await URL.findOne({short : Ourl})
   if(!realurl){
     return res.json({msg : "short url not found"})

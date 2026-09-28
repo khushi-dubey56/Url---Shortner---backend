@@ -22,7 +22,8 @@ async function handleregisterUser(req , res) {
   const createnewUser =  await User.create({
     name : user.name,
     email : user.email,
-    password : hashedPassword
+    password : hashedPassword,
+    
    })
    res.json({msg : "user has been created" , createnewUser})
   
